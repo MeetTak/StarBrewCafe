@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-starbrew-black: #0A0A0A;
+  --color-starbrew-green: #2E7D32;
+  --color-starbrew-green-light: #4CAF50;
+  --color-starbrew-cream: #FAF7F2;
+  --color-starbrew-gray: #B0A89A;
+  --color-starbrew-dark: #141414;
+  --font-heading: var(--font-montserrat);
+  --font-body: var(--font-montserrat);
+  --font-script: var(--font-dancing-script);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-starbrew-black);
+  color: var(--color-starbrew-cream);
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--color-starbrew-green);
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-starbrew-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-starbrew-green);
+  border-radius: 4px;
+}
