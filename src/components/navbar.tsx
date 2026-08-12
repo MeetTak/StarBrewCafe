@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 
 const navLinks = [
   { label: "Home", href: "#hero" },
@@ -19,16 +20,22 @@ export default function Navbar() {
   const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   useEffect(() => {
+    let ticking = false;
     const onScroll = () => {
-      setScrolled(window.scrollY > 50);
-      const sections = navLinks.map((l) => l.href.slice(1));
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
-        if (el && el.getBoundingClientRect().top <= 150) {
-          setActiveSection(`#${sections[i]}`);
-          break;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 50);
+        const sections = navLinks.map((l) => l.href.slice(1));
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const el = document.getElementById(sections[i]);
+          if (el && el.getBoundingClientRect().top <= 150) {
+            setActiveSection(`#${sections[i]}`);
+            break;
+          }
         }
-      }
+        ticking = false;
+      });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -55,17 +62,19 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between h-16 md:h-20">
         <motion.a
           href="#hero"
-          className="font-heading font-black tracking-widest text-starbrew-cream flex items-center gap-2"
-          whileHover={{ scale: 1.05 }}
+          className="font-heading font-black tracking-widest text-starbrew-cream flex items-center gap-2.5"
+          whileHover={{ scale: 1.03 }}
           transition={{ type: "spring", stiffness: 400 }}
         >
-          <motion.div
-            className="w-8 h-8 rounded-full border-2 border-starbrew-green flex items-center justify-center"
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          >
-            <span className="text-starbrew-green text-xs font-black">S</span>
-          </motion.div>
+          <div className="w-8 h-8 rounded-full overflow-hidden border border-starbrew-green/30 shrink-0">
+            <Image
+              src="/brand/starbrew-logo.jpg"
+              alt="StarBrew"
+              width={32}
+              height={32}
+              className="object-cover w-full h-full"
+            />
+          </div>
           <div>
             <span className="text-lg leading-none">STARBREW</span>
             <span className="text-[10px] tracking-[0.3em] text-starbrew-gray ml-1.5">CAFE</span>
@@ -96,7 +105,8 @@ export default function Navbar() {
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden relative w-8 h-8 flex flex-col justify-center items-center gap-1.5 z-50"
-          aria-label="Toggle menu"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
         >
           <motion.span
             animate={mobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
