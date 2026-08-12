@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const footerLinks = [
   { label: "Home", href: "#hero" },
+  { label: "About", href: "#about" },
   { label: "Menu", href: "#menu" },
   { label: "Gallery", href: "#gallery" },
   { label: "Visit Us", href: "#visit-us" },
@@ -22,14 +24,16 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex items-center gap-2 mb-2">
-              <motion.div
-                className="w-8 h-8 rounded-full border-2 border-starbrew-green flex items-center justify-center"
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.6 }}
-              >
-                <span className="text-starbrew-green text-xs font-black font-heading">S</span>
-              </motion.div>
+            <div className="flex items-center gap-2.5 mb-2">
+              <div className="w-8 h-8 rounded-full overflow-hidden border border-starbrew-green/30 shrink-0">
+                <Image
+                  src="/brand/starbrew-logo.jpg"
+                  alt="StarBrew"
+                  width={32}
+                  height={32}
+                  className="object-cover w-full h-full"
+                />
+              </div>
               <div>
                 <p className="font-heading font-bold text-xl tracking-wider text-starbrew-cream leading-none">
                   STARBREW
@@ -60,7 +64,7 @@ export default function Footer() {
                   whileHover={{ x: 6 }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
-                  <span className="text-starbrew-green/0 group-hover:text-starbrew-green transition-colors mr-1">→</span>
+                  <span className="text-starbrew-green/0 group-hover:text-starbrew-green transition-colors mr-1">&rarr;</span>
                   {link.label}
                 </motion.a>
               ))}
@@ -111,7 +115,7 @@ export default function Footer() {
       <div className="border-t border-white/5 relative z-10">
         <div className="max-w-6xl mx-auto px-6 md:px-12 py-6 flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="text-sm text-starbrew-gray">
-            &copy; 2025 StarBrew Cafe. All rights reserved.
+            &copy; 2026 StarBrew Cafe. All rights reserved.
           </p>
           <p className="text-sm text-starbrew-gray">
             Made with <span className="text-starbrew-green">&hearts;</span> in Kishangarh

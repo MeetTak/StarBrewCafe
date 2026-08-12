@@ -1,26 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const galleryItems = [
-  { label: "Cafe Interior", gradient: "from-[#1a1a1a] via-[#2a2520] to-[#1a1a1a]", span: "md:col-span-2 md:row-span-2" },
-  { label: "Latte Art", gradient: "from-[#1a1a1a] via-[#1a2018] to-[#0f150f]" },
-  { label: "Our Espresso", gradient: "from-[#201a1a] via-[#1a1a1a] to-[#1a1510]" },
-  { label: "The Bar", gradient: "from-[#1a1a20] via-[#15151a] to-[#1a1a1a]" },
-  { label: "Cozy Corner", gradient: "from-[#20201a] via-[#1a1a1a] to-[#1a1815]", span: "md:col-span-2" },
-  { label: "Fresh Brew", gradient: "from-[#1a201a] via-[#151a15] to-[#1a1a1a]" },
-  { label: "Evening Vibes", gradient: "from-[#201a20] via-[#1a151a] to-[#1a1a1a]" },
-  { label: "StarBrew Special", gradient: "from-[#1e1e1a] via-[#1a1a15] to-[#1a1a1a]" },
+  { label: "The Space", src: "/images/gallery/cafe-interior-seating.jpg", alt: "Cafe interior seating with warm ambient lighting", span: "md:col-span-2 md:row-span-2" },
+  { label: "Welcome", src: "/images/gallery/cafe-entrance.jpg", alt: "StarBrew Cafe entrance", span: "" },
+  { label: "Counter", src: "/images/menu/cafe-counter.jpg", alt: "StarBrew Cafe counter and barista station", span: "" },
+  { label: "The View", src: "/images/gallery/cafe-exterior-wide.jpg", alt: "Wide exterior view of StarBrew Cafe", span: "md:col-span-2" },
+  { label: "Patio", src: "/images/gallery/patio-seating.jpg", alt: "Outdoor patio seating area", span: "" },
+  { label: "After Dark", src: "/images/hero/cafe-exterior-night.jpg", alt: "StarBrew Cafe exterior at night", span: "" },
 ];
 
 export default function Gallery() {
   const [selected, setSelected] = useState<number | null>(null);
 
+  const navigate = useCallback((direction: 1 | -1) => {
+    setSelected(prev => {
+      if (prev === null) return null;
+      const next = prev + direction;
+      if (next < 0) return galleryItems.length - 1;
+      if (next >= galleryItems.length) return 0;
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (selected === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelected(null);
+      if (e.key === "ArrowRight") navigate(1);
+      if (e.key === "ArrowLeft") navigate(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected, navigate]);
+
   return (
-    <section id="gallery" className="bg-starbrew-black py-20 md:py-32 px-6 md:px-12 relative overflow-hidden">
+    <section id="gallery" className="bg-starbrew-black py-24 md:py-36 px-6 md:px-12 relative overflow-hidden">
       <motion.div
-        className="absolute right-0 top-1/3 w-72 h-72 rounded-full bg-starbrew-green/3 blur-3xl"
+        className="absolute right-0 top-1/3 w-72 h-72 rounded-full bg-starbrew-green/5 blur-3xl"
         animate={{ x: [0, 30, 0], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 10, repeat: Infinity }}
       />
@@ -31,7 +51,7 @@ export default function Gallery() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-14"
         >
           <h2 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-starbrew-cream">
             The Space
@@ -46,39 +66,35 @@ export default function Gallery() {
           <p className="text-starbrew-gray">Step inside StarBrew</p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[160px] md:auto-rows-[200px]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 auto-rows-[140px] sm:auto-rows-[160px] md:auto-rows-[200px]">
           {galleryItems.map((item, i) => (
             <motion.button
               key={item.label}
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{
                 duration: 0.5,
-                delay: i * 0.1,
+                delay: i * 0.08,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              whileHover={{ scale: 1.05, zIndex: 10 }}
+              whileHover={{ scale: 1.03, zIndex: 10 }}
               onClick={() => setSelected(i)}
-              className={`relative rounded-xl overflow-hidden border border-white/5 hover:border-starbrew-green/50 transition-all duration-500 group cursor-pointer hover:shadow-xl hover:shadow-starbrew-green/10 ${item.span || ""}`}
+              className={`relative rounded-xl overflow-hidden border border-white/5 hover:border-starbrew-green/40 transition-all duration-500 group cursor-pointer ${item.span || ""}`}
+              aria-label={`View ${item.label} photo`}
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} group-hover:scale-110 transition-transform duration-700`} />
-
-              <div className="absolute inset-0 bg-starbrew-green/0 group-hover:bg-starbrew-green/10 transition-colors duration-500" />
-
-              <div className="absolute inset-0 flex items-center justify-center opacity-60 group-hover:opacity-100 transition-all duration-300">
-                <div className="text-center transform group-hover:scale-110 transition-transform duration-300">
-                  <motion.div className="w-12 h-12 mx-auto mb-2 rounded-full bg-starbrew-green/10 flex items-center justify-center border border-starbrew-green/20 group-hover:border-starbrew-green/50 transition-colors">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-starbrew-green">
-                      <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2"/>
-                      <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
-                      <path d="M21 15l-5-5L5 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </motion.div>
-                  <p className="text-starbrew-gray/70 text-xs font-heading group-hover:text-starbrew-cream transition-colors duration-300">
-                    {item.label}
-                  </p>
-                </div>
+              <Image
+                src={item.src}
+                alt={item.alt}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                sizes={item.span?.includes("col-span-2") ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 50vw, 25vw"}
+              />
+              <div className="absolute inset-0 bg-starbrew-black/20 group-hover:bg-starbrew-black/10 transition-colors duration-500" />
+              <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-starbrew-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="text-starbrew-cream text-xs font-heading tracking-wide">
+                  {item.label}
+                </p>
               </div>
             </motion.button>
           ))}
@@ -91,44 +107,62 @@ export default function Gallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-6"
+            className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 md:p-8"
             onClick={() => setSelected(null)}
+            role="dialog"
+            aria-label="Image lightbox"
           >
             <motion.div
-              initial={{ scale: 0.5, opacity: 0, rotateY: -15 }}
-              animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-              exit={{ scale: 0.5, opacity: 0, rotateY: 15 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-3xl aspect-[16/10] rounded-2xl overflow-hidden border border-starbrew-green/30 shadow-2xl shadow-starbrew-green/10"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="relative w-full max-w-4xl aspect-[16/10] rounded-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${galleryItems[selected].gradient}`} />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-center"
-                >
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-starbrew-green/10 flex items-center justify-center border border-starbrew-green/30">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-starbrew-green">
-                      <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2"/>
-                      <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
-                      <path d="M21 15l-5-5L5 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                  <p className="text-starbrew-cream font-heading text-xl">
-                    {galleryItems[selected].label}
-                  </p>
-                  <p className="text-starbrew-gray text-sm mt-1">Photo placeholder</p>
-                </motion.div>
+              <Image
+                src={galleryItems[selected].src}
+                alt={galleryItems[selected].alt}
+                fill
+                className="object-cover"
+                sizes="90vw"
+                priority
+              />
+              <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/60 to-transparent">
+                <p className="text-starbrew-cream font-heading text-lg">
+                  {galleryItems[selected].label}
+                </p>
+                <p className="text-starbrew-gray text-sm mt-0.5">
+                  {selected + 1} of {galleryItems.length}
+                </p>
               </div>
+
               <button
                 onClick={() => setSelected(null)}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-starbrew-black/80 flex items-center justify-center text-starbrew-cream hover:text-starbrew-green hover:bg-starbrew-black transition-all duration-200"
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center text-starbrew-cream hover:text-white hover:bg-black/80 transition-all duration-200"
+                aria-label="Close lightbox"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                   <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </button>
+
+              <button
+                onClick={(e) => { e.stopPropagation(); navigate(-1); }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-starbrew-cream hover:bg-black/60 transition-all"
+                aria-label="Previous image"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); navigate(1); }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-starbrew-cream hover:bg-black/60 transition-all"
+                aria-label="Next image"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
             </motion.div>

@@ -29,12 +29,11 @@ export default function MenuCard({ name, price, description, index }: MenuCardPr
           <h4 className="font-heading font-semibold text-starbrew-cream group-hover:text-white transition-colors">
             {name}
           </h4>
-          <motion.span
+          <span
             className="font-heading font-bold text-starbrew-green whitespace-nowrap"
-            whileHover={{ scale: 1.1 }}
           >
             ₹{price}
-          </motion.span>
+          </span>
         </div>
         {description && (
           <p className="text-sm text-starbrew-gray mt-2 leading-relaxed group-hover:text-starbrew-gray/80 transition-colors">

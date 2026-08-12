@@ -20,7 +20,7 @@ export default function MenuSection() {
   const category = menuData[activeCategory];
 
   return (
-    <section id="menu" className="bg-starbrew-dark py-20 md:py-32 px-6 md:px-12 relative overflow-hidden">
+    <section id="menu" className="bg-starbrew-dark py-24 md:py-36 px-6 md:px-12 relative overflow-hidden">
       <motion.div
         className="absolute -left-40 bottom-20 w-80 h-80 rounded-full bg-starbrew-green/5 blur-3xl"
         animate={{ scale: [1, 1.2, 1] }}

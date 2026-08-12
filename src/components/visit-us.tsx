@@ -65,9 +65,9 @@ const contactItems = [
 
 export default function VisitUs() {
   return (
-    <section id="visit-us" className="bg-starbrew-dark py-20 md:py-32 px-6 md:px-12 relative overflow-hidden">
+    <section id="visit-us" className="bg-starbrew-dark py-24 md:py-36 px-6 md:px-12 relative overflow-hidden">
       <motion.div
-        className="absolute left-1/2 top-0 w-96 h-96 -translate-x-1/2 rounded-full bg-starbrew-green/3 blur-3xl"
+        className="absolute left-1/2 top-0 w-96 h-96 -translate-x-1/2 rounded-full bg-starbrew-green/5 blur-3xl"
         animate={{ scale: [1, 1.3, 1] }}
         transition={{ duration: 8, repeat: Infinity }}
       />
